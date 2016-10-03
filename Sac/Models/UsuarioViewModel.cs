@@ -19,7 +19,7 @@ namespace Sac.Models
    
 
         [DisplayName("Usuário")]
-        [Required(ErrorMessage = "O usuário é obrigatório")]
+        [Required(ErrorMessage = "O login é obrigatório")]
         public string Username { get; set; }
 
         [DisplayName("Senha")]

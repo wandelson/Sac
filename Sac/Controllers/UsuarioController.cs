@@ -11,7 +11,7 @@ using System.Web;
 using System.Web.Mvc;
 namespace Sac.Controllers
     {
-        [Authorize(Roles = "Administrador")]
+        //[Authorize(Roles = "Administrador")]
         public class UsuarioController : Controller
         {
             private sacEntities1 db = new sacEntities1();
