@@ -5,6 +5,7 @@ using Sac.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -36,7 +37,7 @@ namespace Sac.Controllers
             return View();
         }
 
-        // [Authorize(Roles = "Administrador")]
+       //  [Authorize(Roles = "Administrador")]
         public ActionResult Criar()
         {
             CarregaRoles();

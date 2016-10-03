@@ -16,24 +16,30 @@ namespace Sac.Controllers
         private sacEntities db = new sacEntities();
 
 
-        public async Task<ActionResult> Index(int? IdEstado)
+        public async Task<ActionResult> Index(string estado)
         {
+
+            BindUrgencia();
+            BindEstado();
+
             IQueryable<Chamado> chamado;
 
             if (User.IsInRole("Administrador") || User.IsInRole("Atendente"))
             {
-                chamado = db.Chamado.Include(c => c.Estado)
-                                        .Include(c => c.Urgencia)
-                                        .Include(c => c.Usuario)
+                chamado = db.Chamado.Include(c => c.Usuario)
                                         .Include(c => c.Usuario1);
             }
             else
             {
-                chamado = db.Chamado.Include(c => c.Estado)
-                                         .Include(c => c.Urgencia)
-                                         .Include(c => c.Usuario)
+                chamado = db.Chamado.Include(c => c.Usuario)
                                          .Include(c => c.Usuario1)
                                          .Where(c => c.Usuario1.UserName == User.Identity.Name);
+            }
+
+
+            if (!string.IsNullOrEmpty(estado) && estado != "Todos")
+            {
+                chamado = db.Chamado.Where(x => x.Estado == estado);
             }
 
 
@@ -45,6 +51,8 @@ namespace Sac.Controllers
         [Authorize(Roles = "Atendente")]
         public async Task<ActionResult> Solucionar(int? id)
         {
+            BindUrgencia();
+            BindEstado();
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -61,20 +69,28 @@ namespace Sac.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Solucionar(int? id, string Solucao)
         {
+
+            BindUrgencia();
+            BindEstado();
+
             var chamado = await db.Chamado.FindAsync(id);
             chamado.Solucao = Solucao;
 
                 var usuario = await db.Usuario.Where(u => u.UserName == User.Identity.Name).FirstAsync();
                 chamado.IdAtendente = usuario.IdUsuario;
 
-            chamado.Estado = "Pendente";
+            chamado.Estado = "Finalizado";
 
             if (ModelState.IsValid && !string.IsNullOrWhiteSpace(chamado.Solucao))
             {
                 db.Entry(chamado).State = EntityState.Modified;
                 await db.SaveChangesAsync();
+                BindUrgencia();
+                BindEstado();
                 return RedirectToAction("Index");
             }
+
+           
 
             ModelState.AddModelError("", "Solução é obrigatória!");
             ViewBag.IdAtendente = new SelectList(db.Usuario, "IdUsuario", "Nome", chamado.IdAtendente);
@@ -93,6 +109,9 @@ namespace Sac.Controllers
             {
                 return HttpNotFound();
             }
+
+            BindUrgencia();
+            BindEstado();
             return View(chamado);
         }
 
@@ -101,21 +120,37 @@ namespace Sac.Controllers
         {
             List<SelectListItem> items = new List<SelectListItem>();
 
-            items.Add(new SelectListItem { Text = "Action", Value = "0" });
+            items.Add(new SelectListItem { Text = "Simples", Value = "Simples" });
 
-            items.Add(new SelectListItem { Text = "Drama", Value = "1" });            
+            items.Add(new SelectListItem { Text = "Moderada", Value = "Moderado" });            
 
-            items.Add(new SelectListItem { Text = "Science Fiction", Value = "3" });
+            items.Add(new SelectListItem { Text = "Grave", Value = "Grave" });
 
             ViewBag.Urgencia = items;
+        }
+
+
+
+        private void BindEstado()
+        {
+            List<SelectListItem> items = new List<SelectListItem>();
+
+            items.Add(new SelectListItem { Text = "Pendente", Value = "Pendente" });
+
+            items.Add(new SelectListItem { Text = "Aguardando", Value = "Aguardando" });
+
+            items.Add(new SelectListItem { Text = "Finalizado", Value = "Finalizado" });
+
+            ViewBag.Estado = items;
         }
 
 
         // GET: Chamado/Create
         public ActionResult Create()
         {
+      
             BindUrgencia();
-
+            BindEstado();
             ViewBag.IdAtendente = new SelectList(db.Usuario, "IdUsuario", "Nome");
             ViewBag.IdCliente = new SelectList(db.Usuario, "IdUsuario", "Nome");
             return View();
@@ -126,17 +161,19 @@ namespace Sac.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "IdChamado,DataAbertura,Descricao,IdCliente,IdEstado,IdUrgencia,IdAtendente,Solucao,DataEncerramento")] Chamado chamado)
+        public async Task<ActionResult> Create( Chamado chamado)
         {
             chamado.DataAbertura = DateTime.Now;
             chamado.Estado = "Aguardando";
 
-                var usuario = await db.Usuario.Where(u => u.UserName == User.Identity.Name).FirstAsync();
-                chamado.IdCliente = usuario.IdUsuario;
-            
+            var usuario = await db.Usuario.Where(u => u.UserName == User.Identity.Name).FirstAsync();
+            chamado.IdCliente = usuario.IdUsuario;
+        
 
             if (ModelState.IsValid)
             {
+
+       
                 db.Chamado.Add(chamado);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
@@ -162,22 +199,35 @@ namespace Sac.Controllers
             }
             ViewBag.IdAtendente = new SelectList(db.Usuario, "IdUsuario", "Nome", chamado.IdAtendente);
             ViewBag.IdCliente = new SelectList(db.Usuario, "IdUsuario", "Nome", chamado.IdCliente);
+            BindUrgencia();
+            BindEstado();
             return View(chamado);
         }
         
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrador")]
-        public async Task<ActionResult> Edit([Bind(Include = "IdChamado,DataAbertura,Descricao,IdCliente,IdEstado,IdUrgencia,IdAtendente,Solucao,DataEncerramento")] Chamado chamado)
+        public async Task<ActionResult> Edit(int id ,Chamado chamado)
         {
+
+            var domain = db.Chamado.Where(x => x.IdChamado == id).SingleOrDefault();
+
+            domain.Estado = chamado.Estado;
+            domain.Descricao = chamado.Descricao;
+            domain.Solucao = chamado.Solucao;
+            domain.Urgencia = chamado.Urgencia;
+
+
             if (ModelState.IsValid)
             {
-                db.Entry(chamado).State = EntityState.Modified;
+                db.Entry(domain).State = EntityState.Modified;
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
             ViewBag.IdAtendente = new SelectList(db.Usuario, "IdUsuario", "Nome", chamado.IdAtendente);
             ViewBag.IdCliente = new SelectList(db.Usuario, "IdUsuario", "Nome", chamado.IdCliente);
+            BindUrgencia();
+            BindEstado();
             return View(chamado);
         }
 

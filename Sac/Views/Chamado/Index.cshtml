@@ -15,17 +15,17 @@
     {
         @Html.Label("Estado:")
 
-        <select name="IdEstado" class="form-control">
+        <select name="estado" class="form-control">
             <option value="null">Todos</option>
-            @foreach (var estado in ViewBag.Estados)
+            @foreach (var estado in ViewBag.Estado)
             {
-                if (Request.QueryString["Estado"] == estado)
+                if (Request.QueryString["Estado"] == estado.Value)
                 {
-                    <option value="@estado.IdEstado" selected="selected">@estado.Nome</option>
+                    <option value="@estado.Value" selected="selected">@estado.Value</option>
                 }
                 else
                 {
-                    <option value="@estado.IdEstado">@estado.Nome</option>
+                    <option value="@estado.Value">@estado.Value</option>
                 }
             }
         </select>
@@ -75,12 +75,6 @@
         <td>
             @Html.DisplayFor(modelItem => item.Urgencia)
         </td>
-        @*<td>
-            @Html.DisplayFor(modelItem => item.Usuario.Nome)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Usuario1.Nome)
-        </td>*@
         <td>
             @if (User.IsInRole("Administrador"))
             {
