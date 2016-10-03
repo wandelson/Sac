@@ -1,0 +1,51 @@
+﻿@model IEnumerable<Modelo.Usuario>
+
+@{
+    ViewBag.Title = "Lista de usuários";
+}
+
+<h2>Lista de usuários</h2>
+
+<p>
+    @Html.ActionLink("Novo usuário", "Criar", "Autenticacao")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Nome)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Email)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Telefone)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UserName)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Nome)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Email)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Telefone)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.UserName)
+        </td>
+        <td>
+            @Html.ActionLink("Editar", "Edit", new { id=item.IdUsuario }) |
+            @Html.ActionLink("Detalhes", "Details", new { id=item.IdUsuario }) |
+            @Html.ActionLink("Excluir", "Delete", new { id=item.IdUsuario })
+        </td>
+    </tr>
+}
+
+</table>

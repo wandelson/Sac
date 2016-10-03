@@ -1,0 +1,75 @@
+﻿@model Sac.Models.Chamado
+
+@{
+    ViewBag.Title = "Detalhes do chamado";
+}
+
+<h2>Detalhes do chamado</h2>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.DataAbertura)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DataAbertura)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Descricao)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Descricao)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Solucao)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Solucao)
+        </dd>
+
+        
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Estado)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Estado)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Urgencia)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Urgencia)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Usuario.Nome)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Usuario.Nome)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Usuario1.Nome)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Usuario1.Nome)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Editar", "Edit", new { id = Model.IdChamado }) |
+    @Html.ActionLink("Voltar", "Index")
+</p>

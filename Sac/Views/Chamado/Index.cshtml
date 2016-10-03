@@ -1,0 +1,102 @@
+﻿
+@model IEnumerable< Sac.Models.Chamado >
+
+@{
+    ViewBag.Title = "Chamados";
+}
+
+<h2>Chamados</h2>
+
+<p>
+    @Html.ActionLink("Novo chamado", "Create")
+</p>
+<div class="form-inline">
+    @using (Html.BeginForm("Index", "Chamado", FormMethod.Get))
+    {
+        @Html.Label("Estado:")
+
+        <select name="IdEstado" class="form-control">
+            <option value="null">Todos</option>
+            @foreach (var estado in ViewBag.Estados)
+            {
+                if (Request.QueryString["Estado"] == estado)
+                {
+                    <option value="@estado.IdEstado" selected="selected">@estado.Nome</option>
+                }
+                else
+                {
+                    <option value="@estado.IdEstado">@estado.Nome</option>
+                }
+            }
+        </select>
+
+      
+        <input type="submit" value="Filtrar" class="btn btn-default" />
+    }
+</div>
+<br />
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.DataAbertura)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Descricao)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Solucao)
+        </th>
+     
+        <th>
+            @Html.DisplayNameFor(model => model.Estado)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Urgencia)
+        </th>
+
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.DataAbertura)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Descricao)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Solucao)
+        </td>
+     
+        <td>
+            @Html.DisplayFor(modelItem => item.Estado)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Urgencia)
+        </td>
+        @*<td>
+            @Html.DisplayFor(modelItem => item.Usuario.Nome)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Usuario1.Nome)
+        </td>*@
+        <td>
+            @if (User.IsInRole("Administrador"))
+            {
+                @Html.ActionLink("Editar", "Edit", new { id = item.IdChamado }) <span>|</span>                
+                @Html.ActionLink("Detalhes", "Details", new { id = item.IdChamado })
+            }
+            @if (User.IsInRole("Atendente") && item.Estado == "Aguardando")
+            {
+                @Html.ActionLink("Solucionar", "Solucionar", new { id = item.IdChamado })
+            }
+            @if (User.IsInRole("Cliente") && item.Estado == "Pendente")
+            {
+                @Html.ActionLink("Fechar", "FecharChamado", new { id = item.IdChamado })
+            }
+        </td>
+    </tr>
+}
+
+</table>
