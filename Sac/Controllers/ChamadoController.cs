@@ -96,9 +96,26 @@ namespace Sac.Controllers
             return View(chamado);
         }
 
+
+        private void BindUrgencia()
+        {
+            List<SelectListItem> items = new List<SelectListItem>();
+
+            items.Add(new SelectListItem { Text = "Action", Value = "0" });
+
+            items.Add(new SelectListItem { Text = "Drama", Value = "1" });            
+
+            items.Add(new SelectListItem { Text = "Science Fiction", Value = "3" });
+
+            ViewBag.Urgencia = items;
+        }
+
+
         // GET: Chamado/Create
         public ActionResult Create()
         {
+            BindUrgencia();
+
             ViewBag.IdAtendente = new SelectList(db.Usuario, "IdUsuario", "Nome");
             ViewBag.IdCliente = new SelectList(db.Usuario, "IdUsuario", "Nome");
             return View();
