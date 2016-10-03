@@ -14,7 +14,7 @@ namespace Sac.Controllers
     public class AutenticacaoController : Controller
     {
         // GET: Autenticacao
-        private sacEntities1  db = new sacEntities1();
+        private sacEntities db = new sacEntities();
 
 
         private void CarregaRoles()

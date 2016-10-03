@@ -14,7 +14,7 @@ namespace Sac.Controllers
         //[Authorize(Roles = "Administrador")]
         public class UsuarioController : Controller
         {
-            private sacEntities1 db = new sacEntities1();
+            private sacEntities db = new sacEntities();
 
             // GET: Usuario
             public async Task<ActionResult> Index()
@@ -63,7 +63,7 @@ namespace Sac.Controllers
                 {
                     if (ModelState.IsValid)
                     {
-                        using (var ctx = new sacEntities1())
+                        using (var ctx = new sacEntities())
                         {
                             var usuarioOld = await ctx.Usuario.FindAsync(usuario.IdUsuario);
                             usuario.UserName = usuarioOld.UserName;

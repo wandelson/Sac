@@ -13,10 +13,10 @@ namespace Sac.Models
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class sacEntities1 : DbContext
+    public partial class sacEntities : DbContext
     {
-        public sacEntities1()
-            : base("name=sacEntities1")
+        public sacEntities()
+            : base("name=sacEntities")
         {
         }
     

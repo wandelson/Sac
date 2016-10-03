@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="415f7a99b1014dcaa5844a70574be580" Name="Diagram1">
+      <Diagram DiagramId="d2898d18e9a84b72acba06be3d1a210c" Name="Diagram1">
         <EntityTypeShape EntityType="sacModel.Chamado" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
         <EntityTypeShape EntityType="sacModel.Usuario" Width="1.5" PointX="0.75" PointY="1.25" IsExpanded="true" />
         <AssociationConnector Association="sacModel.FK_Chamado_UsuarioAtendente" ManuallyRouted="false" />

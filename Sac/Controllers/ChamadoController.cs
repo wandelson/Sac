@@ -13,7 +13,7 @@ namespace Sac.Controllers
     public class ChamadoController : Controller
     {
 
-        private sacEntities1 db = new sacEntities1();
+        private sacEntities db = new sacEntities();
 
 
         public async Task<ActionResult> Index(int? IdEstado)
